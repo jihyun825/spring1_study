@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c"%>    
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8" />
@@ -55,12 +56,14 @@
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
           </div>
           <ul class="navbar-nav  justify-content-end">
+           <c:if test="${sessionScope.member eq null}">
             <li class="nav-item d-flex align-items-center">
-              <a href="" class="nav-link text-body font-weight-bold px-0">
+              <a href="/" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
                 <span class="d-sm-inline d-none">로그인</span>
               </a>
             </li>
+            </c:if>
 			<li class="nav-item d-flex align-items-center">　</li>
 			<li class="nav-item">
 			  <div class="d-flex align-items-center justify-content-between">
@@ -77,12 +80,14 @@
 				</div>
 			</li>
 			<li class="nav-item d-flex align-items-center">　</li>
+						<c:if test="${sessionScope.member ne null}">
 			<li class="nav-item d-flex align-items-center">
-              <a href="" class="nav-link text-body font-weight-bold px-0">
+              <a href="logout()" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
                 <span class="d-sm-inline d-none">로그아웃</span>
               </a>
             </li>
+            </c:if>
           </ul>
         </div>
       </div>

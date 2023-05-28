@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" session="true"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c"%> 
 <!DOCTYPE html>
 <html>
 
@@ -106,16 +107,18 @@
         <span class="mask  bg-gradient-secondary opacity-6"></span>
       </div>
       <div class="card card-body mx-3 mx-md-4 mt-n6">
+        <form action="/insertBoard" method="post" id="boardFrm" name="boardFrm">
         <div class="row gx-4 mb-2">
 		  <div class="col-md-12">
 			<div class="input-group input-group-outline mb-4">
 			  <label class="form-label">제목을 입력해주세요.</label>
-			  <input type="text" class="form-control" id="title">
+			  <input type="hidden" value="${member.mem_id }" name="mem_id" id="mem_id">
+			  <input type="text" class="form-control" name="botitle" id="title">
 			</div>
 		  </div>
 		  <div class="col-md-12">
 		    <div class="input-group input-group-outline mb-4">
-			  <textarea class="form-control" rows="20" id="content"></textarea>
+			  <textarea class="form-control" rows="20" id="content" name="bocontent"></textarea>
 		    </div>
 		  </div>
 		  <div class="col-md-12">　</div>
@@ -125,6 +128,7 @@
 		    <button type="button" class="btn btn-info" id="golist">목록</button>
 		  </div>
         </div>
+        </form>
       </div>
     </div>
   </main>
@@ -177,40 +181,45 @@
   <script src="../assets/js/core/bootstrap.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <script>
-    var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      }
-      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-    }
-    var title = $('#title').val();
-    var content = $('#content').val();
-    $(function){
-    	$('#insert').on('click',function(){
-    		var contentObject={
-    				botitle : title,
-    				bocontent : content,
-    				member : ${member}
-    		}
-    		$.ajax({
-				type:'post',
-				url : '/insertBoard',
-				data : JSON.stringify(contentObject),
-				contentType:"application/json; charset = utf-8",
-				success : function(result){
-					console.log(result);
-					if(result==='SUCCESS'){
-						alert("등록이 정상적으로 완료되었습니다.);
-						location.href="/list.do"
-					}
-				}
-			});
-    	})
-    }
+<script>
+  var win = navigator.platform.indexOf('Win') > -1;
+  if (win && document.querySelector('#sidenav-scrollbar')) {
+    var options = {
+      damping: 0.5
+    };
+    Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+  }
+  $(function() {
+    $('#insert').on('click', function() {
+      var title = $('#title').val();
+      var content = $('#content').val();
+      var mem_id = $('#getId').val();
+     var boardFrm = $('#boardFrm');
+     
+     if(title == ""){
+    	 alert("제목을 입력해주세요");
+    	 $('#title').focus();
+    	 return false;
+    	 
+     }
+     if(content == ""){
+    	 alert("내용을 입력해주세요");
+    	 $('#content').focus();
+    	 return false;
+     }
+      boardFrm.submit();
+    });
+    $('#cancle').on('click', function() {
+    	location.href= "/list.do"
+    	
+    });
+    $('#golist').on('click', function() {
+    	location.href= "/list.do"
+    	
+    })
     
-  </script>
+  });
+</script>
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->

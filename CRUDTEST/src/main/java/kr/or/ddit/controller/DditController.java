@@ -2,11 +2,14 @@ package kr.or.ddit.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +23,9 @@ import kr.or.ddit.service.IBoardService;
 import kr.or.ddit.service.IMemberService;
 import kr.or.ddit.vo.BoardVO;
 import kr.or.ddit.vo.MemberVO;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 public class DditController {
 	@Inject
@@ -129,28 +134,32 @@ public class DditController {
 	public String insert() {
 		return "/pages/ddit_form";
 	}
-	
 	@RequestMapping(value="/insertBoard", method=RequestMethod.POST)
-	public String insertBoard(@RequestBody BoardVO board, MemberVO member) {
+	public String insertBoard(BoardVO board, MemberVO member) {
 		String goPage = "";
-		String botitle = board.getBotitle();
-		String bocontent = board.getBocontent();
-		String mem_id = member.getMem_id();
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("botitle", botitle);
-		map.put("bocontent", bocontent);
-		map.put("mem_id", mem_id);
-		ServiceResult result = bservice.insertBoard(map);
-		
-		if(result == ServiceResult.OK) {
-			goPage = "redirect:/list.do";
-		}else {
-			goPage = "redirect:/list.do";
-		}
-		return goPage;
-		
-		
+	    String botitle = board.getBotitle();
+	    String bocontent = board.getBocontent();
+	    String mem_id = member.getMem_id();
+	    log.info("botitle: " + botitle);
+	    log.info("bocontent: " + bocontent);
+	    log.info("mem_id: " + mem_id);
+	    
+	    HashMap<String, String> map = new HashMap<>();
+	    map.put("botitle", botitle);
+	    map.put("bocontent", bocontent);
+	    map.put("mem_id", mem_id);
+	    
+	    ServiceResult result = bservice.insertBoard(map);
+	    
+	    if (result == ServiceResult.OK) {
+	       goPage = "redirect:/list.do";
+	    } else {
+	    	 goPage = "redirect:/list.do";
+	    }
+	    
+	    return goPage;
 	}
+
 }
 
 

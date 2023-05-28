@@ -24,4 +24,11 @@
   		delete from board
   		where bono = #{bono}
   	</delete>
+  	
+  	<insert id="insertBoard" parameterType="map">
+  	 insert into board
+  	 (bono,botitle,bocontent,bowriter,bodate)
+  	 values(seq_board.nextval,#{botitle},#{bocontent},#{mem_id},sysdate)
+  	</insert>
+  	
   </mapper>
