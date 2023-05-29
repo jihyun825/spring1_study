@@ -31,4 +31,18 @@
   	 values(seq_board.nextval,#{botitle},#{bocontent},#{mem_id},sysdate)
   	</insert>
   	
+  	<select id="selectBoard" parameterType="int" resultType="boardVo">
+  		select * from board where bono = #{bono}
+  
+  	</select>
+  	
+  	<update id="updateBoard" parameterType="map">
+  			update board
+  			set
+  			botitle = #{botitle},
+  			bocontent = #{bocontent},
+  			bowriter = #{mem_id}
+  			where 
+  			bono = #{bono}
+  		</update>
   </mapper>
