@@ -18,6 +18,11 @@ public interface IBoardService {
 
 	public ServiceResult insertBoard(HashMap<String, String> map);
 
+	public BoardVO selectBoard(int bono);
+
+	public ServiceResult updateBoard(HashMap<String, String> map);
+
+
 	
 
 }

@@ -95,14 +95,14 @@ public class DditController {
 	}
 		return goPage;
 }
-	
+	//메인리스트 출력
 	@RequestMapping(value="/list.do", method = RequestMethod.GET)
 	public String boardList(Model model) {
 		List<BoardVO> boardList = bservice.boardList();
 		model.addAttribute("list",boardList);
 		return "/pages/ddit_list";
 	}
-	
+	//게시글 상세보기
 	@RequestMapping(value="/boardDetail/{bono}")
 	public String datailBoard(@PathVariable("bono")int bono,Model model,RedirectAttributes redirect) {
 		String goPage ="";
@@ -118,6 +118,8 @@ public class DditController {
 		return goPage;
 		
 	}
+	
+	//게시글 삭제
 	@RequestMapping(value="/boardDel/{bono}")
 	public String boardDel(@PathVariable("bono")int bono) {
 		String goPage ="";
@@ -130,19 +132,21 @@ public class DditController {
 		return goPage;
 	}
 	
+	//게시글 등록 폼 호출
 	@RequestMapping(value="/insert.do")
 	public String insert() {
 		return "/pages/ddit_form";
 	}
+	//게시글 등록 프로세스
 	@RequestMapping(value="/insertBoard", method=RequestMethod.POST)
 	public String insertBoard(BoardVO board, MemberVO member) {
 		String goPage = "";
 	    String botitle = board.getBotitle();
 	    String bocontent = board.getBocontent();
 	    String mem_id = member.getMem_id();
-	    log.info("botitle: " + botitle);
-	    log.info("bocontent: " + bocontent);
-	    log.info("mem_id: " + mem_id);
+//	    log.info("botitle: " + botitle);
+//	    log.info("bocontent: " + bocontent);
+//	    log.info("mem_id: " + mem_id);
 	    
 	    HashMap<String, String> map = new HashMap<>();
 	    map.put("botitle", botitle);
@@ -158,6 +162,50 @@ public class DditController {
 	    }
 	    
 	    return goPage;
+	}
+	
+	//게시글 수정 폼 출력
+	@RequestMapping(value="/boardMod/{bono}")
+	public String boardMod(Model model, @PathVariable("bono")int bono) {
+		String goPage = "";
+		BoardVO board = bservice.selectBoard(bono);
+		
+		if(board ==null) {
+			goPage = "/boardDetail/"+bono;
+		}else {
+			model.addAttribute("board",board);
+			model.addAttribute("modify","m");
+			goPage ="pages/ddit_form";
+			
+		}
+		return goPage;
+			
+	}
+	//게시글 수정 프로세스
+	@RequestMapping(value="/update.do")
+	public String boardUpdate(BoardVO board, MemberVO member,RedirectAttributes redirect) {
+		String goPage = "";
+		HashMap<String, String> map = new HashMap<>();
+		map.put("botitle",board.getBotitle());
+		map.put("bocontent",board.getBocontent());
+		map.put("mem_id",member.getMem_id());
+		map.put("bono",board.getBono());
+		log.info("botitle: " + board.getBotitle());
+	    log.info("bocontent: " +board.getBocontent());
+	    log.info("mem_id: " + member.getMem_id());
+	    log.info("bono: " + board.getBono());
+		
+		
+		ServiceResult result = bservice.updateBoard(map);
+		
+		if(result == ServiceResult.OK) {
+			goPage = "redirect:/boardDetail/"+board.getBono();
+		}else {
+			goPage = "redirect:/boardDetail/"+board.getBono();
+			redirect.addFlashAttribute("fail","f");
+		}
+		
+		return goPage;
 	}
 
 }

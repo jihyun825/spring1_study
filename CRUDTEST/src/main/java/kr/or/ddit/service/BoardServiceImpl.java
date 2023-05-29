@@ -60,4 +60,22 @@ public class BoardServiceImpl implements IBoardService {
 		
 		return result;
 	}
+	@Override
+	public BoardVO selectBoard(int bono) {
+		
+		return dao.selectBoard(bono);
+	}
+	
+	@Override
+	public ServiceResult updateBoard(HashMap<String, String> map) {
+		ServiceResult result = null;
+		int status = dao.updateBoard(map);
+		
+		if(status>0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
 }

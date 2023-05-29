@@ -43,4 +43,13 @@ public class BoardDaoImpl implements IBoardDAO {
 		// TODO Auto-generated method stub
 		return session.insert("Board.insertBoard",map);
 	}
+	@Override
+	public BoardVO selectBoard(int bono) {
+		return session.selectOne("Board.selectBoard",bono);
+	}
+	@Override
+	public int updateBoard(HashMap<String, String> map) {
+		// TODO Auto-generated method stub
+		return session.update("Board.updateBoard",map);
+	}
 }

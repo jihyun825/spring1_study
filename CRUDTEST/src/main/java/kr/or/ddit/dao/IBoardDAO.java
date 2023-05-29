@@ -19,6 +19,10 @@ public interface IBoardDAO {
 
 	public int insertBoard(HashMap<String, String> map);
 
+	public BoardVO selectBoard(int bono);
+
+	public int updateBoard(HashMap<String, String> map);
+
 
 
 }
