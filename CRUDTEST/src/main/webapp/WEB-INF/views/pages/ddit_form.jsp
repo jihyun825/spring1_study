@@ -26,7 +26,13 @@
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.0.4" rel="stylesheet" />
   
 </head>
-
+<c:if test="${member eq null }">
+	<c:redirect url="/"/>
+</c:if>
+<c:set value="등록" var = "name"/>
+<c:if test="${modify eq 'm' }">
+	<c:set value="수정" var="name"/>
+</c:if>
 <body class="g-sidenav-show  bg-gray-200">
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
     <div class="sidenav-header">
@@ -113,18 +119,26 @@
 			<div class="input-group input-group-outline mb-4">
 			  <label class="form-label">제목을 입력해주세요.</label>
 			  <input type="hidden" value="${member.mem_id }" name="mem_id" id="mem_id">
-			  <input type="text" class="form-control" name="botitle" id="title">
+			  <input type="hidden" value="${board.bono }" name="bono" id="bonos">
+			  <input type="text" class="form-control" name="botitle" value="${board.botitle }" id="title">
 			</div>
 		  </div>
 		  <div class="col-md-12">
 		    <div class="input-group input-group-outline mb-4">
-			  <textarea class="form-control" rows="20" id="content" name="bocontent"></textarea>
+			  <textarea class="form-control" rows="20" id="content" name="bocontent">${board.bocontent }</textarea>
 		    </div>
 		  </div>
 		  <div class="col-md-12">　</div>
 		  <div class="col-md-12">
-		    <button type="button" class="btn btn-primary" id="insert">등록</button>
+		  	<input type="button" value="${name }" class="btn btn-primary" id="insert" > 
+		    <c:if test="${modify eq 'm' }">
+		    <a href="/boardDetail/${board.bono}">
 		    <button type="button" class="btn btn-danger" id="cancle">취소</button>
+		    </a>
+		    </c:if>
+		    <c:if test="${modify ne 'm' }">
+		    <button type="button" class="btn btn-danger" id="cancle">취소</button>
+		    </c:if>
 		    <button type="button" class="btn btn-info" id="golist">목록</button>
 		  </div>
         </div>
@@ -195,7 +209,7 @@
       var content = $('#content').val();
       var mem_id = $('#getId').val();
      var boardFrm = $('#boardFrm');
-     
+     console.log($(this).val());
      if(title == ""){
     	 alert("제목을 입력해주세요");
     	 $('#title').focus();
@@ -207,6 +221,12 @@
     	 $('#content').focus();
     	 return false;
      }
+     
+     if($(this).val()=="수정"){
+    	 console.log($(this).val());
+			$('#boardFrm').attr("action","/update.do");
+		}
+     
       boardFrm.submit();
     });
     $('#cancle').on('click', function() {

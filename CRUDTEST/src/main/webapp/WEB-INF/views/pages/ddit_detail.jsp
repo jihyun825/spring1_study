@@ -198,6 +198,10 @@
     		};
     		
     	});
+    	
+    	$('#boardMod').on('click',function(){
+    		location.href= "/boardMod/"+${board.bono};
+    	})
     })
   </script>
   <!-- Github buttons -->

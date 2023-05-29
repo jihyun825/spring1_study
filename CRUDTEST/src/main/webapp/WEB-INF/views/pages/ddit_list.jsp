@@ -115,9 +115,9 @@
 				</div>
 				<div class="col-md-1">
 				  <div class="input-group input-group-static mb-4">
-					 <select class="form-control" id="exampleFormControlSelect1">
-					   <option>제목</option>
-					   <option>작성자</option>
+					 <select class="form-control" id="exampleFormControlSelect1" name="searchType">
+					   <option value="title" <c:if test="${searchType == 'title' }"><c:out value="selected"/></c:if>>제목</option>
+					   <option value="writer" <c:if test="${searchType == 'writer' }"><c:out value="selected"/></c:if>>작성자</option>
 					 </select>
 				   </div>
 				</div>
@@ -125,7 +125,7 @@
 				  <div class="ms-md-auto">
 					<form class="input-group input-group-outline">
 					  <label class="form-label"></label>
-					  <input type="text" class="form-control">
+					  <input type="text" class="form-control" name="searchWord">
 					</form>
 				  </div>
 				</div>
