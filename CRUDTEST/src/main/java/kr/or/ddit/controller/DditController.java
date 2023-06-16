@@ -190,10 +190,10 @@ public class DditController {
 		map.put("bocontent",board.getBocontent());
 		map.put("mem_id",member.getMem_id());
 		map.put("bono",board.getBono());
-		log.info("botitle: " + board.getBotitle());
-	    log.info("bocontent: " +board.getBocontent());
-	    log.info("mem_id: " + member.getMem_id());
-	    log.info("bono: " + board.getBono());
+//		log.info("botitle: " + board.getBotitle());
+//	    log.info("bocontent: " +board.getBocontent());
+//	    log.info("mem_id: " + member.getMem_id());
+//	    log.info("bono: " + board.getBono());
 		
 		
 		ServiceResult result = bservice.updateBoard(map);
@@ -207,7 +207,10 @@ public class DditController {
 		
 		return goPage;
 	}
-
+	@RequestMapping(value="/test")
+	public String testPage() {
+		return "pages/test_form";
+	}
 }
 
 

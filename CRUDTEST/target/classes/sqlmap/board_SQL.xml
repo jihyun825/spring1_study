@@ -4,8 +4,22 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="Board">
+  <sql id="boardSearch">
+  		<if test="searchType != null and searchType == 'title'">
+  			and (botitle like '%' ||#{searchWord}||'%')
+  		</if>
+  		<if test="searchType != null and searchType == 'writer'">
+			 and(bowriter like '%' || #{searchWord}|| '%' )
+  		</if>
+  			<if test="searchType != null and searchType == 'wrti'">
+			 and(bowriter like '%' || #{searchWord}|| '%'  or
+			 	botitle like '%' ||#{searchWord}||'%'
+			 )
+  		</if>
+  	</sql>
+  
   	<select id="boardList" resultType="boardVo">
-		select * from board  	
+		select * from board  order by bono desc
   	</select>
   	
   	<update id="updateHit" parameterType="int">
@@ -24,4 +38,25 @@
   		delete from board
   		where bono = #{bono}
   	</delete>
+  	
+  	<insert id="insertBoard" parameterType="map">
+  	 insert into board
+  	 (bono,botitle,bocontent,bowriter,bodate)
+  	 values(seq_board.nextval,#{botitle},#{bocontent},#{mem_id},sysdate)
+  	</insert>
+  	
+  	<select id="selectBoard" parameterType="int" resultType="boardVo">
+  		select * from board where bono = #{bono}
+  
+  	</select>
+  	
+  	<update id="updateBoard" parameterType="map">
+  			update board
+  			set
+  			botitle = #{botitle},
+  			bocontent = #{bocontent},
+  			bowriter = #{mem_id}
+  			where 
+  			bono = #{bono}
+  		</update>
   </mapper>

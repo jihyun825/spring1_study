@@ -114,6 +114,7 @@
 <script type="text/javascript">
 	$(function(){
 		var signUpFrm = $('#signUpFrm');
+	
 		
 		$('#signupBtn').on('click',function(){
 			var mem_id = $('#mem_id').val();
@@ -124,15 +125,6 @@
 			var mem_email = $('#mem_email').val();
 			var mem_agree = $('#mem_agree').is(':checked');
 			var mem_gender = $('input[name="mem_gender"]:checked').val();
-			
-			console.log("agree:"+mem_agree);
-			console.log("mem_gender:"+mem_gender);
-			console.log("mem_id:"+mem_id);
-			console.log("mem_pw:"+mem_pw);
-			console.log("mem_pw2:"+mem_pw2);
-			console.log("mem_name:"+mem_name);
-			console.log("mem_phone:"+mem_phone);
-			console.log("mem_email:"+mem_email);
 			
 			if(mem_id == ""){
 				alert("아이디를 입력해주세요!!!");

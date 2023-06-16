@@ -4,8 +4,22 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="Board">
+  <sql id="boardSearch">
+  		<if test="searchType != null and searchType == 'title'">
+  			and (botitle like '%' ||#{searchWord}||'%')
+  		</if>
+  		<if test="searchType != null and searchType == 'writer'">
+			 and(bowriter like '%' || #{searchWord}|| '%' )
+  		</if>
+  			<if test="searchType != null and searchType == 'wrti'">
+			 and(bowriter like '%' || #{searchWord}|| '%'  or
+			 	botitle like '%' ||#{searchWord}||'%'
+			 )
+  		</if>
+  	</sql>
+  
   	<select id="boardList" resultType="boardVo">
-		select * from board  	
+		select * from board  order by bono desc
   	</select>
   	
   	<update id="updateHit" parameterType="int">

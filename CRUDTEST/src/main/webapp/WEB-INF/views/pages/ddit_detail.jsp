@@ -3,6 +3,19 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c"%>    
 <!DOCTYPE html>
 <head>
+<style type="text/css">
+#micicon{
+color : black;
+width: 50px;
+height: 50px;
+}
+
+#micicon:hover {
+	cursor: pointer;
+	color : red;
+}
+
+</style>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
@@ -12,6 +25,7 @@
     대덕인재개발원 CRUD 연습
   </title>
   <!--     Fonts and icons     -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
   <!-- Nucleo Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
@@ -58,6 +72,9 @@
           <ul class="navbar-nav  justify-content-end">
            <c:if test="${sessionScope.member eq null}">
             <li class="nav-item d-flex align-items-center">
+             <i class="fa-solid fa-microphone" id="micicon"></i>
+					<input type="hidden" id="start" value="시작">
+					<input type="hidden" id="stop" value="멈춤">
               <a href="/" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
                 <span class="d-sm-inline d-none">로그인</span>
@@ -82,6 +99,9 @@
 			<li class="nav-item d-flex align-items-center">　</li>
 						<c:if test="${sessionScope.member ne null}">
 			<li class="nav-item d-flex align-items-center">
+			 <i class="fa-solid fa-microphone" id="micicon"></i>
+					<input type="hidden" id="start" value="시작">
+					<input type="hidden" id="stop" value="멈춤">
               <a href="logout()" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
                 <span class="d-sm-inline d-none">로그아웃</span>
@@ -179,6 +199,7 @@
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script>
+  const speech = new webkitSpeechRecognition();
   $(function(){
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -202,6 +223,56 @@
     	$('#boardMod').on('click',function(){
     		location.href= "/boardMod/"+${board.bono};
     	})
+    	
+    	$(function() {
+    	  $('#search').on('click', function() {
+    	    var type = $('#searchType').val();
+    	    var word = $('#searchWord').val();
+    	    console.log(type);
+    	    console.log(word);
+    	  });
+
+    	 });	  
+    	  document.getElementById('stop').addEventListener('click', function() {
+    	    speech.stop();
+    	  });
+
+    	  speech.addEventListener('result', function(event) {
+    	    const transcript = event.results[0][0].transcript;
+    	    console.log(transcript);
+    	    if (transcript.includes('목록')) {
+    	      location.href = "/list.do";
+    	    }
+    	    if (transcript.includes('삭제')) {
+    	    	location.href= "/boardDel/"+${board.bono};
+      	    }
+    	    
+    	    if (transcript.includes('로그아웃')) {
+    	      	session.invalidate();
+    	        }
+    	  });
+
+    	  document.getElementById('micicon').addEventListener('click', function() {
+    	    speech.start();
+    	  });
+    	  document.addEventListener('keydown', function(event) {
+        	  if (event.shiftKey && event.which === 65) {
+        	    // `shift`와 `a`가 동시에 눌렸을 때 수행할 동작을 여기에 작성합니다.
+        		  speech.start();
+        	  }
+        	});
+    	  
+    	  function newsentence(transcript) {
+    		  var keyword = '번';
+    		  
+    		  const index = transcript.indexOf(keyword);
+    		  
+    		  if (index !== -1) {
+    		    const sentence = transcript.slice(0,index);
+    		    return sentence;
+    		  }
+    		  return '';
+    		}
     })
   </script>
   <!-- Github buttons -->

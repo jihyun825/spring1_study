@@ -80,15 +80,6 @@ if (document.querySelector('.fixed-plugin')) {
   var navbar = document.getElementById('navbarBlur');
   var buttonNavbarFixed = document.getElementById('navbarFixed');
 
-  if (fixedPluginButton) {
-    fixedPluginButton.onclick = function() {
-      if (!fixedPlugin.classList.contains('show')) {
-        fixedPlugin.classList.add('show');
-      } else {
-        fixedPlugin.classList.remove('show');
-      }
-    }
-  }
 
   if (fixedPluginButtonNav) {
     fixedPluginButtonNav.onclick = function() {

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="Main">
+  	<select id="selectBoardList" resultType="boardVo">
+  		<![CDATA[
+  			select b.*
+				from (
+					select a.*, row_number() over (order by a.bono desc) rnum
+					from(
+					    select 
+					    bono,botitle,bocontent,bowriter,bodate,bohit
+					    from board
+					    where 1=1
+					    order by bono desc
+				)a
+				)b
+				where rnum <=5
+  		]]>
+  	
+  	</select>
+  
+  		
+  	<select id="selectNoticeList" resultType="noticeVo">
+  		<![CDATA[
+  			select b.*
+				from (
+					select a.*, row_number() over (order by a.bono desc) rnum
+					from(
+					    select 
+					    bono,botitle,bocontent,bowriter,bodate,bohit
+					    from notice
+					    where 1=1
+					    order by bono desc
+				)a
+				)b
+				where rnum <=5
+  		]]>
+  	
+  	</select>
+  	
+  	<select id="selectFreeList" resultType="freeVo">
+  		<![CDATA[
+  			select b.*
+				from (
+					select a.*, row_number() over (order by a.bono desc) rnum
+					from(
+					    select 
+					    bono,botitle,bocontent,bowriter,bodate,bohit
+					    from free
+					    where 1=1
+					    order by bono desc
+				)a
+				)b
+				where rnum <=5
+  		]]>
+  	
+  	</select>
+  	
+  	<select id="alltFreeList" resultType="freeVo">
+  	select * from free
+  	</select>
+  	
+  	  	<select id="alltBoardList" resultType="boardVo">
+  		select * from board
+  	
+  	</select>
+  	
+  	  	<select id="allNoticeList" resultType="noticeVo">
+  			select * from notice
+  	
+  	</select>
+  
+  </mapper>

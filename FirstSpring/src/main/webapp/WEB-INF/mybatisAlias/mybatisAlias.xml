@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration	
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+  
+  <configuration>
+  	<!-- 
+  		[mybatis 설정참고사이트]
+  			- http://mybatis.org/mybatis-3/getting-started.html
+  			- configuration dtd를 설정할 수 있도록 제공
+  			
+  			configuration내에서 설정할 항목 2가지
+  			 - 카멜케이스 설정
+  			 -자주사용하는 타입의 별칭설정
+  		
+  	 -->
+  	 
+  	 <settings>
+  	 <!-- 
+  	 	#카멜케이스 설정
+  	 	 - mapUnderscoreToCamelCase true설정
+  	 	 [마이바티스]스프링에서 "_"를 사용한 컬럼명을 사용시, (book 테이블의 book_id) 카멜케이스로 읽어줍니다.
+  	 	 > BOOK_ID를 bookId로 읽어줌 
+  	 	 ex) 테이블 컬럼명이  member_id인경우 jsp화면에서 이값을 출력시 memberId로 사용할 수 있다.
+  	  -->
+  	 	<setting name="mapUnderscoreToCamelCase" value="true"/>
+  	 </settings>
+  	 <!-- 자주사용하는 타입의 별칭을 세팅 -->
+  	 <typeAliases>
+  	 	<!-- <typeAlias type="패키지를 포함한 클래스명" alias="내가 사용할 별칭"/> -->
+  	 	 <typeAlias type="kr.or.ddit.vo.BoardVO" alias="boardVo"/>
+  	 	 <typeAlias type="kr.or.ddit.vo.PaginationInfoVO" alias="pagingVo"/>
+  	 	 <typeAlias type="kr.or.ddit.vo.NoticeVO" alias="noticeVo"/>
+  	 	 <typeAlias type="kr.or.ddit.vo.FreeVO" alias="freeVo"/>
+  	 	</typeAliases>
+  </configuration>

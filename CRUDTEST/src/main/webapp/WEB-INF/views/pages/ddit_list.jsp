@@ -6,6 +6,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style type="text/css">
+#micicon{
+color : black;
+width: 50px;
+height: 50px;
+}
+
+</style>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
@@ -24,6 +32,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.0.4" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <c:if test="${wrong eq 'n' }">
 	<script type="text/javascript">
@@ -115,7 +124,7 @@
 				</div>
 				<div class="col-md-1">
 				  <div class="input-group input-group-static mb-4">
-					 <select class="form-control" id="exampleFormControlSelect1" name="searchType">
+					 <select class="form-control"  name="searchType" id="searchType">
 					   <option value="title" <c:if test="${searchType == 'title' }"><c:out value="selected"/></c:if>>제목</option>
 					   <option value="writer" <c:if test="${searchType == 'writer' }"><c:out value="selected"/></c:if>>작성자</option>
 					 </select>
@@ -125,12 +134,15 @@
 				  <div class="ms-md-auto">
 					<form class="input-group input-group-outline">
 					  <label class="form-label"></label>
-					  <input type="text" class="form-control" name="searchWord">
+					  <input type="text" class="form-control" name="searchWord" id="searchWord">
 					</form>
 				  </div>
 				</div>
 				<div class="col-md-2">
-				  <button type="button" class="btn btn-outline-secondary">검색</button>
+				  <button type="button" class="btn btn-outline-secondary" id="search">검색</button>
+				  <i class="fa-solid fa-microphone" id="micicon"></i>
+					<input type="hidden" id="start" value="시작">
+					<input type="hidden" id="stop" value="멈춤">
 				  <button type="button" class="btn btn-outline-secondary" onclick = "insetBoard()">등록</button>
 				</div>
 			  </div>
@@ -247,7 +259,9 @@
   <script src="../assets/js/core/bootstrap.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <script>
+  const speech = new webkitSpeechRecognition();
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
       var options = {
@@ -263,9 +277,73 @@
     	location.href = "/insert.do";
     }
     
+   
+    $(function() {
+    	  $('#search').on('click', function() {
+    	    var type = $('#searchType').val();
+    	    var word = $('#searchWord').val();
+    	    console.log(type);
+    	    console.log(word);
+    	  });
+
+    	  
+    	  //음성인식 이벤트 스탑
+    	  document.getElementById('stop').addEventListener('click', function() {
+    	    speech.stop();
+    	  });
+
+    	  //speech 결과 이벤트
+    	  speech.addEventListener('result', function(event) {
+    	    const transcript = event.results[0][0].transcript;
+    	    console.log(transcript);
+    	    if (transcript.includes('글쓰기') || transcript.includes('등록')) {
+    	      location.href = "/insert.do";
+    	    }
+    	    if (transcript.includes('로그아웃')) {
+    	    	session.invalidate();
+      	    }
+    	    if (transcript.includes('번글')||transcript.includes('번 글')||transcript.includes('번') ) {
+    	    	var num = newsentence(transcript)
+    	    	 var parsedNum = parseInt(num); // 문자열을 숫자로 변환합니다.
+		  			if (!isNaN(parsedNum)) { // 숫자인지 확인합니다.
+		  				  location.href = "/boardDetail/" + parsedNum;
+		 			 } else {
+		   			 console.log("유효한 번호를 인식할 수 없습니다.");
+ 			 }
+      	    }
+    	  });
+
+    	  //음성인식 시작이벤트
+    	  document.getElementById('micicon').addEventListener('click', function() {
+    	    speech.start();
+    	  });
+    	  
+    	  // 인식된 문장을 가공하는 메소드
+    	  function newsentence(transcript) {
+    		  var keyword = '번';
+    		  
+    		  const index = transcript.indexOf(keyword);
+    		  
+    		  if (index !== -1) {
+    		    const sentence = transcript.slice(0,index);
+    		    return sentence;
+    		  }
+    		  
+    		  return '';
+    		}
+    	  //키보드로 음성인식 작동하는 메솓
+    	  document.addEventListener('keydown', function(event) {
+        	  if (event.shiftKey && event.which === 65) {
+        	    // `shift`와 `a`가 동시에 눌렸을 때 수행할 동작을 여기에 작성합니다.
+        		  speech.start();
+        	  }
+        	});
+    	});
+    
   </script>
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
+
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/material-dashboard.min.js?v=3.0.4"></script>
 </body>

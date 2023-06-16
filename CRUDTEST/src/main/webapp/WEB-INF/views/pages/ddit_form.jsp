@@ -5,6 +5,18 @@
 <html>
 
 <head>
+<style type="text/css">
+#micicon{
+color : black;
+width: 50px;
+height: 50px;
+}
+
+#micicon:hover {
+	cursor: pointer;
+	color : red;
+}
+</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -24,8 +36,13 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.0.4" rel="stylesheet" />
-  
+<script src="../../resources/ckeditor/ckeditor.js"></script>  
 </head>
+<c:if test="${fail eq 'f' }">
+	<script type="text/javascript">
+		alert("수정에 실패했습니다. 다시시도해주세요");
+	</script>
+</c:if>
 <c:if test="${member eq null }">
 	<c:redirect url="/"/>
 </c:if>
@@ -76,8 +93,7 @@
 			<li class="nav-item">
 			  <div class="d-flex align-items-center justify-content-between">
 				<div class="avatar-group mt-2 avatar avatar-xs rounded-circle">
-				  <img alt="Image placeholder" src="../assets/img/team-1.jpg" style="width:40px;">
-				</div>
+				  <i class="fa-solid fa-microphone" id="micicon"></i>				</div>
 			  </div>
 			</li>
 			<li class="nav-item d-flex align-items-center">　</li>
@@ -148,19 +164,8 @@
   </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
-      <i class="material-icons py-2">settings</i>
+      <i class="fa-solid fa-microphone" id="micicon"></i>
     </a>
-    <div class="card shadow-lg">
-      <div class="card-header pb-0 pt-3">
-        <div class="float-start">
-          <h5 class="mt-3 mb-0">Material UI Configurator</h5>
-          <p>See our dashboard options.</p>
-        </div>
-        <div class="float-end mt-4">
-          <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
-            <i class="material-icons">clear</i>
-          </button>
-        </div>
         <!-- End Toggle Button -->
       </div>
       <hr class="horizontal dark my-1">
@@ -190,12 +195,17 @@
       </div>
     </div>
   </div>
+    <input type="hidden" id="start" value="시작">
+	<input type="hidden" id="stop" value="멈춤">
+  
   <!--   Core JS Files   -->
   <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 <script>
+const speech = new webkitSpeechRecognition();
   var win = navigator.platform.indexOf('Win') > -1;
   if (win && document.querySelector('#sidenav-scrollbar')) {
     var options = {
@@ -237,8 +247,68 @@
     	location.href= "/list.do"
     	
     })
-    
+ 	  document.getElementById('stop').addEventListener('click', function() {
+  	    speech.stop();
+  	  });
+
+  	  speech.addEventListener('result', function(event) {
+  	    const transcript = event.results[0][0].transcript;
+  	    console.log("원문"+ transcript);
+  	    
+	    if (transcript.includes('로그아웃')) {
+	    	session.invalidate();
+  	    }
+	    if (transcript.includes('목록')) {
+  	      location.href = "/list.do";
+  	    }
+  	    if (transcript.includes('제목')) {
+  	    	var transtitle = newsentence(transcript);
+  	    	console.log("가공문" + transtitle);
+  	    	$('#title').attr('placeholder','');
+  	    	$('#title').val(transtitle);
+  	    }
+  	    
+  	  if (transcript.includes('내용')) {
+  		var transcontent = newsentence(transcript);
+  		console.log("가공문" +transcontent);
+	      $('#content').val(transcontent);
+	    }
+  	  
+  	  if (transcript.includes('등록')) {
+    		console.log(transcontent);
+    		boardFrm.submit();
+  	    }
+  	  });
+
+  	  document.getElementById('micicon').addEventListener('click', function() {
+  	    speech.start();
+  	  });
+  	  
+  	  
   });
+  document.addEventListener('keydown', function(event) {
+	  if (event.shiftKey && event.which === 65) {
+	    // `shift`와 `a`가 동시에 눌렸을 때 수행할 동작을 여기에 작성합니다.
+		  speech.start();
+	  }
+	});
+  
+  function newsentence(transcript) {
+	  var keyword = '';
+	  if(transcript.includes('제목에')){
+		  keyword = '제목에';
+	  }else if(transcript.includes('내용에')){
+		  keyword = '내용에';
+	  }
+	  const index = transcript.indexOf(keyword);
+	  
+	  if (index !== -1) {
+	    const sentence = transcript.slice(index + keyword.length).trim();
+	    return sentence;
+	  }
+	  
+	  return '';
+	}
 </script>
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
